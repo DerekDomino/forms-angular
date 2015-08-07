@@ -247,10 +247,12 @@ DataForm.prototype.internalSearch = function (req, resourcesToSearch, includeRes
   var searchParts = searchFor.split(/[\s,\_\/\'\\\(\)'\-]+/);
   var normalizedTerms = searchParts.map(function(s) { return normalizeForSearch(s); });
 
-  var regularRegexp = '(' + searchParts.join('.*') + ')';
-  var normalizedRegexp = '(' + normalizedTerms.join('.*') + ')';
+  //var regularRegexp = '(' + searchParts.join('.*') + ')';
+  //var normalizedRegexp = '(' + normalizedTerms.join('.*') + ')';
 
-  searchCriteria = {$regex: '(' + [regularRegexp, normalizedRegexp].join('|') + ')', $options: 'i'};
+  var allTerms = _.uniq(normalizedTerms.concat(searchParts));
+
+  searchCriteria = {$regex: '(' + allTerms.join('|') + ')', $options: 'i'};
 
   this.searchFunc(
     searches,
